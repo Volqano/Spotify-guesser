@@ -3,7 +3,7 @@ const app = require('../src/app');
 
 
 describe('Routes', () => {
-    it('should respond with TEST on /', async () => {
+    it('should respond with 200 status code', async () => {
         const response = await request(app).get('/');
         expect(response.status).toBe(200);
     });
