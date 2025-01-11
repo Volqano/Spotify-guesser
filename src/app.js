@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
+const querystring = require('querystring');
 const app = express();
-const { get_spotify_auth, get_user_data, get_spotify_tokens } = require('./src/spotify_auth');
-const port = 3000;
+const { get_spotify_auth, get_user_data, get_spotify_tokens } = require('./spotify_auth');
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -47,6 +47,4 @@ app.get('/callback', async function(req, res) {
   }
 });
 
-app.listen(port, () => {
-  console.log('Server is listening on port ' + port);
-});
+module.exports = app;
