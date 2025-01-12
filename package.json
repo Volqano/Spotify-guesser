@@ -16,6 +16,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jest": "^29.7.0",
+    "path": "^0.12.7",
     "querystring": "^0.2.1",
     "supertest": "^7.0.0"
   }
