@@ -1,6 +1,11 @@
 const axios = require('axios');
 const crypto = require('crypto');
 const querystring = require('querystring');
+const path = require('path');
+const dotenv = require('dotenv');
+const parentDir = path.resolve(__dirname, '..');
+const envPath = path.join(parentDir, '.env');
+dotenv.config({ path: envPath });
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
