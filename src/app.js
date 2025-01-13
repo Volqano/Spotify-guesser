@@ -5,7 +5,7 @@ const app = express();
 const { get_spotify_auth, get_user_data, get_spotify_tokens } = require('./spotify_auth');
 
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set('views', './src/views');
 
 app.get('/login', (req, res) => {
   res.render('login');
