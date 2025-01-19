@@ -1,9 +1,6 @@
 name: Run Tests
 
-on:
-  pull_request:
-    branches:
-      - main
+on: [push]
 
 jobs:
   test:
@@ -20,6 +17,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set up environment variables
+        run: |
+          echo "SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "SPOTIFY_REDIRECT_URI=${{ secrets.SPOTIFY_REDIRECT_URI }}" >> $GITHUB_ENV
+          echo "SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
 
       - name: Run Jest tests
         run: npm test
