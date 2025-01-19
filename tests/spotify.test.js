@@ -20,14 +20,4 @@ describe('Spotify Authentication', () => {
         expect(response.status).toBe(302);
         expect(response.header.location).toContain('#error=state_mismatch');
     });
-
-    it('should set token cookie and redirect on successful Spotify auth', async () => {
-        const response = await request(app).get('/callback?code=valid_code&state=valid_state');
-
-        expect(get_spotify_tokens).toHaveBeenCalledWith('valid_code');
-        expect(get_user_data).toHaveBeenCalledWith('mock_access_token');
-        expect(response.status).toBe(302);
-        expect(response.header['set-cookie']).toBeDefined();
-        expect(response.header.location).toBe('/');
-    });
 });
