@@ -3,9 +3,10 @@ const app = require('../src/app');
 
 
 describe('Routes', () => {
-    it('should respond with 200 status code', async () => {
+    it('should redirect to /login because its not loged', async () => {
         const response = await request(app).get('/');
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(302);
+        expect(response.headers.location).toBe('/login');
     });
 
     it('should redirect to Spotify login URL on /spotify/login', async () => {
