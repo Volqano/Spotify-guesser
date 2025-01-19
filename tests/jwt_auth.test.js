@@ -3,6 +3,10 @@ const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const { generateJWT } = require('../src/routes');
 
+beforeAll(() => {
+    process.env.JWT_SECRET = 'your_secret_value';
+});
+
 describe('JWT Authentication', () => {
     it('should allow access to / if valid JWT token is provided', async () => {
         const token = generateJWT({ id: 'user123', name: 'Test User' });
