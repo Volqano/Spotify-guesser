@@ -15,8 +15,7 @@ describe('JWT Authentication', () => {
             .set('Cookie', `token=${token}`);
         
         expect(response.status).toBe(200);
-        expect(response.body.user).toBeDefined();
-        expect(response.body.user.id).toBe('user123');
+        expect(response.text).toContain('Logged as: Test User');
     });
 
     it('should redirect to /login if no JWT token is provided', async () => {

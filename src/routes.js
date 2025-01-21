@@ -35,7 +35,7 @@ router.get('/callback', async function(req, res) {
     const state = req.query.state || null;
 
     if (state === null) {
-        res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
+        return res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
     } 
     try {
         const tokens = await get_spotify_tokens(code);
@@ -52,10 +52,10 @@ router.get('/callback', async function(req, res) {
 
         res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
-        res.redirect('/');
+        return res.redirect('/');
     } catch (error) {
-        res.status(500).send('Error while exchanging tokens or fetching user data');
-        res.redirect('/login?error=auth_failed');
+        console.error('Error while exchanging tokens or fetching user data', error);
+        return res.redirect('/login?error=auth_failed');
     }
 });
 
