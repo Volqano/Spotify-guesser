@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Menu</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #player-name { position: absolute; top: 10px; right: 20px; font-weight: bold; }
+        .menu-container { margin-top: 50px; }
+        .menu-button { display: block; margin: 10px auto; padding: 10px; width: 200px; cursor: pointer; }
+        input { padding: 5px; width: 180px; }
+    </style>
+</head>
+<body>
+
+    <!-- Show player name in right corner -->
+    <div id="player-name">Logged as: <%= user.name %></div>
+
+    <div class="menu-container">
+        <button class="menu-button" onclick="createRoom()">Create new room</button>
+        <button class="menu-button" onclick="viewStats()">Your Stats</button>
+
+        <div>
+            <input type="text" id="room-code" placeholder="Room code">
+            <button class="menu-button" onclick="joinRoom()">Join</button>
+        </div>
+    </div>
+
+    <script>
+        function createRoom() {
+            alert("Do implementacji");
+        }
+
+        function viewStats() {
+            alert("Do implementacji");
+        }
+
+        function joinRoom() {
+            const code = document.getElementById('room-code').value;
+            if (!code) return alert("Enter valid room code!");
+            alert("Joining room " + code + "... Do implementacji");
+        }
+    </script>
+
+</body>
+</html>

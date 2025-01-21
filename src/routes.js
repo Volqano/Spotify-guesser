@@ -16,8 +16,7 @@ router.get('/login', (req, res) => {
 
 // main menu route // if user is not loged in it will redirect him to /login
 router.get('/', authenticateJWT, (req, res) => {
-    // if auth is correct we will show main menu
-    res.json({ user: req.user });
+    res.render('main', { user: req.user });
 });
 
 router.get('/spotify/login', function(req, res) {
@@ -36,9 +35,9 @@ router.get('/callback', async function(req, res) {
     const state = req.query.state || null;
 
     if (state === null) {
-        res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
-    } else {
-        try {
+        return res.redirect('/#' + querystring.stringify({ error: 'state_mismatch' }));
+    } 
+    try {
         const tokens = await get_spotify_tokens(code);
         const access_token = tokens.access_token;
         const refresh_token = tokens.refresh_token;
@@ -53,10 +52,10 @@ router.get('/callback', async function(req, res) {
 
         res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
-        res.redirect('/');
-        } catch (error) {
-        res.status(500).send('Error while exchanging tokens or fetching user data');
-        }
+        return res.redirect('/');
+    } catch (error) {
+        console.error('Error while exchanging tokens or fetching user data', error);
+        return res.redirect('/login?error=auth_failed');
     }
 });
 
