@@ -10,8 +10,12 @@ function generateJWT(user) {
     return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '24h' });
 }
 
+// router.get('/login', (req, res) => {
+//   res.render('login');
+// });
 router.get('/login', (req, res) => {
-  res.render('login');
+    const spotify_url = get_spotify_auth();
+    res.render('login', {spotify_url});
 });
 
 // main menu route // if user is not loged in it will redirect him to /login
