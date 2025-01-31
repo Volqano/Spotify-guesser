@@ -11,7 +11,7 @@ function generateJWT(user) {
 }
 
 router.get('/login', (req, res) => {
-  res.render('login');
+    res.render('login');
 });
 
 // main menu route // if user is not loged in it will redirect him to /login
@@ -40,6 +40,8 @@ router.get('/callback', async function(req, res) {
     try {
         const tokens = await get_spotify_tokens(code);
         const access_token = tokens.access_token;
+        console.log('Code received:', code);
+        console.log('Access token received:', access_token);
         const refresh_token = tokens.refresh_token;
 
         const user_data = await get_user_data(access_token);
