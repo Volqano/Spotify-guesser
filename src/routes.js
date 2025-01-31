@@ -10,12 +10,8 @@ function generateJWT(user) {
     return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '24h' });
 }
 
-// router.get('/login', (req, res) => {
-//   res.render('login');
-// });
 router.get('/login', (req, res) => {
-    const spotify_url = get_spotify_auth();
-    res.render('login', {spotify_url});
+    res.render('login');
 });
 
 // main menu route // if user is not loged in it will redirect him to /login
@@ -44,6 +40,8 @@ router.get('/callback', async function(req, res) {
     try {
         const tokens = await get_spotify_tokens(code);
         const access_token = tokens.access_token;
+        console.log('Code received:', code);
+        console.log('Access token received:', access_token);
         const refresh_token = tokens.refresh_token;
 
         const user_data = await get_user_data(access_token);

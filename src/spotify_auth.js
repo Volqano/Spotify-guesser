@@ -42,7 +42,7 @@ async function get_spotify_tokens(code) {
         }),
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+          'Authorization': 'Basic ' + Buffer.from(`${client_id}:${client_secret}`).toString('base64')
         },
     };
 
