@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  todo-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    depends_on:
+      - todo-database
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+      - 35729:35729
+
+  todo-database:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todo_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
