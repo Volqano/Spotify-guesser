@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoreboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center min-h-screen relative">
+    <div class="absolute top-4 right-4">
+        <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Main Menu</a>
+    </div>
+    <div class="bg-gradient-to-r from-blue-200 to-blue-300 p-6 rounded-lg shadow-lg w-full max-w-4xl">
+        <div class="text-center mb-6">
+            <h1 class="text-5xl font-bold text-gray-800">Scoreboard</h1>
+            <div class="flex justify-center items-center mt-4">
+                <h2 class="text-3xl font-semibold text-gray-700">MY WINS: </h2>
+                <span class="text-3xl font-semibold text-blue-600 ml-2"><%= myWins %></span>
+            </div>
+            <div class="flex justify-center items-center mt-2">
+                <h2 class="text-3xl font-semibold text-gray-700">GAMES PLAYED: </h2>
+                <span class="text-3xl font-semibold text-blue-600 ml-2"><%= gamesPlayed %></span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="border p-4 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg">
+                <h3 class="text-xl font-semibold mb-4">TOP 10 WINS</h3>
+                <ul class="list-disc list-inside">
+                    <% top10Wins.forEach(function(user) { %>
+                        <li><%= user %></li>
+                    <% }); %>
+                </ul>
+            </div>
+            <div class="border p-4 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg">
+                <h3 class="text-xl font-semibold mb-4">TOP TEN GAMES PLAYED</h3>
+                <ul class="list-disc list-inside">
+                    <% top10GamesPlayed.forEach(function(user) { %>
+                        <li><%= user %></li>
+                    <% }); %>
+                </ul>
+            </div>
+            <div class="border p-4 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg">
+                <h3 class="text-xl font-semibold mb-4">LAST PLAYED WITH WINS</h3>
+                <ul class="list-disc list-inside">
+                    <% lastPlayedWithWins.forEach(function(user) { %>
+                        <li><%= user %></li>
+                    <% }); %>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

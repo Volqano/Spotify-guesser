@@ -61,6 +61,11 @@ router.get('/callback', async function(req, res) {
     }
 });
 
+router.get('/stats',authenticateJWT, async function (req,res) {
+    res.render('score_board', {user: req.user, myWins: 5, gamesPlayed: 1, top10Wins: ['miau', 1,2,3,4,5,6,7,8,9],
+        top10GamesPlayed: ['miau', 1,2,3,4,5,6,7,8,9], lastPlayedWithWins: ['miau', 1,2,3,4,5,6,7,8,9]} )
+});
+
 module.exports = {
     generateJWT,
     router

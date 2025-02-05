@@ -1,31 +1,126 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #player-name { position: absolute; top: 10px; right: 20px; font-weight: bold; }
-        .menu-container { margin-top: 50px; }
-        .menu-button { display: block; margin: 10px auto; padding: 10px; width: 200px; cursor: pointer; }
-        input { padding: 5px; width: 180px; }
+        .custom-button {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            text-decoration: none;
+            background-color: #4A5568;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+            width: 200px;
+        }
+
+        .custom-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+            transition: left 0.3s ease;
+        }
+
+        .custom-button:hover::before {
+            left: 100%;
+        }
+
+        .custom-button:hover {
+            background-color: #2D3748;
+        }
+
+        .custom-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 69, 0, 0.5), transparent 70%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+        }
+
+        .custom-button:hover::after {
+            opacity: 1;
+        }
+
+        .glass-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .vinyl-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 703.125px; /* 25% bigger than 562.5px */
+            height: 703.125px;
+            opacity: 1;
+        }
+
+        .username-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 10px 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            color: white;
+        }
+
+        .credit-link {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            font-size: 12px;
+            color: white;
+        }
     </style>
 </head>
-<body>
-
+<body class="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 flex flex-col items-center justify-center min-h-screen font-sans">
     <!-- Show player name in right corner -->
-    <div id="player-name">Logged as: <%= user.name %></div>
+    <div id="player-name" class="absolute top-4 right-4 username-box">
+        <%= user.name %>
+    </div>
 
-    <div class="menu-container">
-        <button class="menu-button" onclick="createRoom()">Create new room</button>
-        <button class="menu-button" onclick="viewStats()">Your Stats</button>
+    <img src="/pics/Lovepik_com-380389492-abstract-vinyl-record-pattern-retro-realistic-equipment.png" alt="Vinyl music disk with transparent background" class="vinyl-background">
 
-        <div>
-            <input type="text" id="room-code" placeholder="Room code">
-            <button class="menu-button" onclick="joinRoom()">Join</button>
+
+    <div class="glass-box flex flex-col items-center space-y-4 mt-12">
+        <button class="custom-button" onclick="createRoom()">
+            Create new room
+        </button>
+        <button class="custom-button" onclick="viewStats()">
+            Your Stats
+        </button>
+
+        <div class="flex flex-col items-center space-y-2">
+            <input type="text" id="room-code" placeholder="Room code" class="border border-gray-300 rounded py-2 px-4 text-center w-48">
+            <button class="custom-button" onclick="joinRoom()">
+                Join
+            </button>
         </div>
     </div>
+
+    <a href="https://lovepik.com/images/png-disc.html" class="credit-link">Disc Png vectors by Lovepik.com</a>
 
     <script>
         function createRoom() {
@@ -33,7 +128,7 @@
         }
 
         function viewStats() {
-            alert("Do implementacji");
+            window.location.href = window.location.href + "stats/";
         }
 
         function joinRoom() {
@@ -42,6 +137,5 @@
             alert("Joining room " + code + "... Do implementacji");
         }
     </script>
-
 </body>
 </html>
