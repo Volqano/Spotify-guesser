@@ -10,8 +10,24 @@ services:
     env_file:
       - .env
     ports:
-      - 3000:3000
+      - 3001:3000
       - 35729:35729
+    networks:
+      - app-network
+
+  todo-rooms:
+    build:
+      context: ./rooms
+      dockerfile: Dockerfile
+    depends_on:
+      - todo-database
+    env_file:
+      - .env
+    ports:
+      - 3002:3000
+      - 35730:35729
+    networks:
+      - app-network
 
   todo-database:
     image: mysql:latest
@@ -26,6 +42,27 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./db/db-init:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    
+
+  reverse-proxie:
+    build: 
+      context: ./reverse-proxie
+      dockerfile: dockerfile
+    depends_on:
+      - todo-app
+      - todo-rooms
+    env_file:
+      - .env
+    ports:
+      - "80:80"  # Expose port 80 (HTTP) to the outside world
+    networks:
+      - app-network
 
 volumes:
   db_data:
+
+networks:
+  app-network:
+    driver: bridge
