@@ -8,7 +8,7 @@ function generateJWT(user) {
     return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '24h' });
 }
 
-router.get('/',authenticateJWT,async function(req,res)
+router.get('/create-room',authenticateJWT,async function(req,res)
 {
     res.send(req.user);
 });

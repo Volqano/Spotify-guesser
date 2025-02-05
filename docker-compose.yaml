@@ -49,14 +49,14 @@ services:
   reverse-proxie:
     build: 
       context: ./reverse-proxie
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     depends_on:
       - todo-app
       - todo-rooms
     env_file:
       - .env
     ports:
-      - "80:80"  # Expose port 80 (HTTP) to the outside world
+      - "81:80"  # Expose port 80 (HTTP) to the outside world
     networks:
       - app-network
 

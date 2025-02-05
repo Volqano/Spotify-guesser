@@ -8,7 +8,7 @@ const envPath = path.join(parentDir, '.env');
 dotenv.config({ path: envPath });
 const ip_address = process.env.SERVER_IP || 'localhost';
 const client_id = process.env.SPOTIFY_CLIENT_ID;
-const redirect_uri = `http://${ip_address}:3000/callback`;
+const redirect_uri = `http://${ip_address}:81/callback`;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 //const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
 
