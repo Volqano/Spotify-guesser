@@ -16,7 +16,8 @@ function generateRoomCode() {
 }
 
 rooms={}
-users_map = {}
+
+
 
 app.use(cookieParser());
 app.use(express.static(__dirname+"/public"));
@@ -58,8 +59,10 @@ app.get('/room/:roomCode', authenticateJWT, async function(req, res) {
         return res.status(400).send('Room is full');
     }
 
-    // Add the user to the room
-    room.players.push(user);
+    if (!room.players.some(existingUser => existingUser.email === user.email)) {
+        // Add the user to the room if not already present
+        room.players.push(user);
+      }
 
     users=[];
 
@@ -75,42 +78,119 @@ app.get('/room/:roomCode', authenticateJWT, async function(req, res) {
     io.to(roomCode).emit('playerJoined', user); // Notify others in the room
 });
 
+async function getTheTrack(socket_id) {
+    return new Promise(async (resolve, reject) => {
+        const user = users_map[socket_id] || {};
+
+        if (!user) {
+            reject('User not found');
+            return;
+        }
+
+        const accessToken = user.access_token;
+
+        try {
+            const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Spotify API error: ${response.status}`);
+            }
+
+            const trackData = await response.json();
+            resolve(trackData);
+        } catch (error) {
+            console.error('Error fetching track:', error);
+            reject(error);
+        }
+    });
+}
+
+
+users_map = {}
+roomcode_map = {}
 
 io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('joinRoom', (roomCode,email) => {
+        if(!rooms[roomCode])
+            {
+                console.log('error','Pokój nie istnieje');
+                return;
+            }
         socket.join(roomCode);
-        const user = rooms[roomCode].players.find(u => u.email === email);
+        var user = rooms[roomCode].players.find(u => u.email === email);
         if (!user) {
-        socket.emit('error', 'User not found');
+        console.log('error', 'User not found');
         return ;
         }
-        console.log(rooms[roomCode]);
         users_map[socket.id] = user;
+        roomcode_map[socket.id] = roomCode;
+        console.log(users_map);
         io.to(roomCode).emit('playerJoined',{name: user.name,image: user.image[0].url} , socket.id );
     });
 
-    // Handle user disconnection
-    socket.on('disconnect', () => {
-        console.log('User disconnected: ' + socket.id);
-        
-        const user = users_map[socket.id]; // Get user from the users_map using socket id
 
-        if (user) {
-            // Find the room they were in
-            const roomCode = Object.keys(rooms).find(code => rooms[code].players.some(u => u.email === user.email));
-
-            if (roomCode) {
-                // Remove user from the room
-                rooms[roomCode].players = rooms[roomCode].players.filter(u => u.email !== user.email);
-                
-                // Notify the room about the user's disconnection
-                io.to(roomCode).emit('playerLeft', `${user.name} has left the room`);
-            }
+    socket.on('get_my_track', async ()=>
+        {
+            if (!users_map[socket.id]) {
+            socket.emit('error', 'User not found');
+            return;
         }
 
+        try {
+            const track = await getTheTrack(socket.id);
+            console.log(track);
+            } 
+        catch (error) {
+            console.log(error);
+            }
+        });
+
+    // Handle user disconnection
+    socket.on('disconnect', () => {
+        
+        var user = users_map[socket.id];
+        console.log(user);
+        console.log(users_map);
+        console.log(rooms);
+        var roomCode = roomcode_map[socket.id];
+        console.log(rooms[roomCode]);
+        console.log(rooms[roomCode].players);
+        if(!rooms[roomCode] || !roomCode)
+            {
+                return;
+            }
+        if(rooms[roomCode].players.length==1)
+            {
+                delete rooms[roomCode];
+                delete users_map[socket.id];
+                delete roomcode_map[socket.id];
+                return;
+            }
+        if (user) {
+            if (roomCode) {
+                // Remove user from the room
+                for(i=0; i<4 ;i++)
+                {
+                    if(rooms[roomCode].players[i]===user){
+                    delete rooms[roomCode].players[i];}
+                }
+                rooms[roomCode].players=rooms[roomCode].players.filter(player => Object.keys(player).length > 0);
+                
+                // Notify the room about the user's disconnection
+                io.to(roomCode).emit('playerLeft', {name: user.name,image: user.image[0].url});
+            }
+        }
+        
+        
         // Remove the user from the users_map
         delete users_map[socket.id];
+        delete roomcode_map[socket.id]
     });
 
 });
