@@ -11,4 +11,4 @@ RUN npm install
 # kopiowanie całego folderu projektu w którym znajduje się dockerfile (WEPPO-ITCC-PROJECT) bez docker ignore 
 COPY . .
 
-CMD ["node", "src/server.js"]
+CMD ["node", "src/app.js"]

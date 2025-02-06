@@ -49,7 +49,11 @@ router.get('/callback', async function(req, res) {
 
         const jwtToken = generateJWT({
             id: user_data.id,
-            name: user_data.display_name
+            name: user_data.display_name,
+            email: user_data.email,
+            image: user_data.images,
+            refresh_token: refresh_token,
+            access_token: access_token,
         });
 
         res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
