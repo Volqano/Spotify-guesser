@@ -78,31 +78,80 @@ app.get('/room/:roomCode', authenticateJWT, async function(req, res) {
     io.to(roomCode).emit('playerJoined', user); // Notify others in the room
 });
 
+
+const getRefreshToken = async (user) => {
+
+    // refresh token that has been previously stored
+    const url = "https://accounts.spotify.com/api/token";
+ 
+     const payload = {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/x-www-form-urlencoded'
+       },
+       body: new URLSearchParams({
+         grant_type: 'refresh_token',
+         refresh_token: user.refresh_token,
+         client_id: user.id
+       }),
+     }
+     const body = await fetch(url, payload);
+     const response = await body.json();
+ 
+     user.access_token = response.access_token;
+     if (response.refreshToken) {
+       user.refresh_token = response.refresh_token;
+     }
+   }
+
 async function getTheTrack(socket_id) {
     return new Promise(async (resolve, reject) => {
-        const user = users_map[socket_id] || {};
+        let user = users_map[socket_id] || {};
 
         if (!user) {
             reject('User not found');
             return;
         }
 
-        const accessToken = user.access_token;
+        let accessToken = user.access_token;
 
         try {
-            const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+            let response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             });
 
-            if (!response.ok) {
+            if (response.status == 401) {
+                console.log("Access token expired, refreshing...");
+
+                // Refresh the token
+                await getRefreshToken(user);
+
+                // Retry the request with the new access token
+                accessToken = user.access_token;
+                let retryResponse = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (retryResponse.ok) {
+                    let trackData = await retryResponse.json();
+                    resolve(trackData); // Successfully fetched the track
+                } else {
+                    throw new Error(`Spotify API error: ${retryResponse.status}`);
+                }
+            }
+            if(response.ok){
+            let trackData = await response.json();
+            resolve(trackData);}
+            else
+            {
                 throw new Error(`Spotify API error: ${response.status}`);
             }
-
-            const trackData = await response.json();
-            resolve(trackData);
         } catch (error) {
             console.error('Error fetching track:', error);
             reject(error);
@@ -155,12 +204,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         
         var user = users_map[socket.id];
-        console.log(user);
-        console.log(users_map);
-        console.log(rooms);
         var roomCode = roomcode_map[socket.id];
-        console.log(rooms[roomCode]);
-        console.log(rooms[roomCode].players);
         if(!rooms[roomCode] || !roomCode)
             {
                 return;

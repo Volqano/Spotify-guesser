@@ -69,7 +69,7 @@
     <p class="mt-2 text-white font-semibold"><%= users[2].username %></p>
    </div>
    <div class="flex flex-col items-center">
-     <button id="dynamicButton" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg flex items-center hidden">
+     <button id="dynamicButton" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg flex items-center hidden" onclick="playtrack()">
       <i class="fas fa-play mr-2"></i>
       Play
      </button>
@@ -121,12 +121,17 @@
     </script>
 
     <script>
+    
+    function playtrack()
+    {
+        socket.emit('get_my_track');
+    }
     // Connect to the backend server
     const socket = io("http://<%= ip %>:81"); // Connects to the same domain automatically
     const roomcode = "<%= roomcode %>";
     const memail = "<%= me %>";
     
-    socket.emit("joinRoom", roomcode, memail, socket.id);}
+    socket.emit("joinRoom", roomcode, memail, socket.id);
 
 
     socket.on("roomFull", (message) => {
