@@ -1,0 +1,192 @@
+<html>
+ <head>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+   @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .spin {
+      animation: spin 2s linear infinite;
+    }
+    @keyframes ember {
+      0% { opacity: 1; transform: translateY(0); background: rgba(255, 69, 0, 0.8); }
+      100% { opacity: 0; transform: translateY(-50px); background: rgba(128, 128, 128, 0.5); }
+    }
+    .ember {
+      position: relative;
+    }
+    .ember div {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 69, 0, 0.8);
+      border-radius: 50%;
+      animation: ember 2s infinite;
+    }
+    .ember div:nth-child(1) { top: 0; left: 0; animation-delay: 0s; }
+    .ember div:nth-child(2) { top: 0; left: 50%; animation-delay: 0.2s; }
+    .ember div:nth-child(3) { top: 0; left: 100%; animation-delay: 0.4s; }
+    .ember div:nth-child(4) { top: 50%; left: 0; animation-delay: 0.6s; }
+    .ember div:nth-child(5) { top: 50%; left: 100%; animation-delay: 0.8s; }
+    .ember div:nth-child(6) { top: 100%; left: 0; animation-delay: 1s; }
+    .ember div:nth-child(7) { top: 100%; left: 50%; animation-delay: 1.2s; }
+    .ember div:nth-child(8) { top: 100%; left: 100%; animation-delay: 1.4s; }
+    .ember div:nth-child(9) { top: 25%; left: 25%; animation-delay: 1.6s; }
+    .ember div:nth-child(10) { top: 25%; left: 75%; animation-delay: 1.8s; }
+    .ember div:nth-child(11) { top: 75%; left: 25%; animation-delay: 2s; }
+    .ember div:nth-child(12) { top: 75%; left: 75%; animation-delay: 2.2s; }
+    .ember div:nth-child(13) { top: 10%; left: 10%; animation-delay: 2.4s; }
+    .ember div:nth-child(14) { top: 10%; left: 90%; animation-delay: 2.6s; }
+    .ember div:nth-child(15) { top: 90%; left: 10%; animation-delay: 2.8s; }
+    .ember div:nth-child(16) { top: 90%; left: 90%; animation-delay: 3s; }
+    .ember div:nth-child(17) { top: 5%; left: 5%; animation-delay: 3.2s; }
+    .ember div:nth-child(18) { top: 5%; left: 95%; animation-delay: 3.4s; }
+    .ember div:nth-child(19) { top: 95%; left: 5%; animation-delay: 3.6s; }
+    .ember div:nth-child(20) { top: 95%; left: 95%; animation-delay: 3.8s; }
+  </style>
+ </head>
+ <body class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 relative">
+  <div class="absolute inset-0 flex items-center justify-center">
+   <img alt="Spinning disk" class="spin opacity-50" src="/pics/disc_to_spin.png"/>
+  </div>
+  <div class="flex justify-between w-full max-w-4xl z-10">
+   <div id="user1" class="flex flex-col items-center">
+    <img alt="<%= users[0].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[0].image %>"/>
+    <p class="mt-2 text-white font-semibold"><%= users[0].username %></p>
+   </div>
+   <div id="user2" class="flex flex-col items-center">
+    <img alt="<%= users[1].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[1].image %>"/>
+    <p class="mt-2 text-white font-semibold"><%= users[1].username %></p>
+   </div>
+  </div>
+  <div class="flex justify-between w-full max-w-4xl mt-8 z-10">
+   <div id="user3" class="flex flex-col items-center">
+    <img alt="<%= users[2].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[2].image %>"/>
+    <p class="mt-2 text-white font-semibold"><%= users[2].username %></p>
+   </div>
+   <div class="flex flex-col items-center">
+    <form class="mt-4">
+     <input class="border p-2 w-64 rounded-lg shadow-lg" placeholder="Input text" type="text"/>
+     <button id="dynamicButton" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg flex items-center hidden">
+      <i class="fas fa-play mr-2"></i>
+      Play
+     </button>
+     <button id="guessButton" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center">
+      <i class="fas fa-question mr-2"></i>
+      Guess
+     </button>
+    </form>
+   </div>
+   <div id="user4" class="flex flex-col items-center">
+    <img alt="<%= users[3].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[3].image %>"/>
+    <p class="mt-2 text-white font-semibold"><%= users[3].username %></p>
+   </div>
+  </div>
+  <script>
+        function setUserInFlames(userId) {
+      // Remove ember class from all users
+      document.querySelectorAll('.ember').forEach(el => {
+        el.classList.remove('ember');
+        // Remove ember divs
+        el.querySelectorAll('div').forEach(div => div.remove());
+      });
+      
+      // Add ember class to the selected user
+      const userElement = document.getElementById(userId);
+      userElement.classList.add('ember');
+      
+      // Add ember divs
+      for (let i = 0; i < 20; i++) {
+        const emberDiv = document.createElement('div');
+        userElement.appendChild(emberDiv);
+      }
+    }
+
+    // Example usage: Set user1 in flames
+    setUserInFlames('user1');
+
+    // Function to toggle the visibility of the dynamic button
+    function toggleDynamicButton(isVisible) {
+      const button = document.getElementById('dynamicButton');
+      if (isVisible) {
+        button.classList.remove('hidden');
+      } else {
+        button.classList.add('hidden');
+      }
+    }
+
+    // Example usage: Show the dynamic button
+    toggleDynamicButton(true);
+    </script>
+
+    <script>
+    // Connect to the backend server
+    const socket = io("http://<%= ip %>:81"); // Connects to the same domain automatically
+    const roomcode = "<%= roomcode %>";
+    const memail = "<%= me %>";
+    
+    socket.emit("joinRoom", roomcode, memail);
+
+
+    socket.on("roomFull", (message) => {
+        alert(message); // Notify if the room is full
+    });
+
+    socket.on("playerJoined", (player,socket_id) => {
+        console.log(`${player.name} joined!`);
+        if(socket.id == socket_id)
+        {
+            return;
+        }
+        // Update the corresponding user profile picture and username on the page
+        updateUserProfile(player, 'joined');
+    });
+
+    socket.on("playerLeft", (player) => {
+        console.log(`${player.name} left!`);
+        
+        // Reset the corresponding user profile to empty
+        updateUserProfile(player, 'left');
+    });
+
+    // Update User Profile on the page
+    function updateUserProfile(player, action) {
+        const userSlot = getUserSlot(player.name);
+        
+        if (action === 'joined') {
+            // Set user details (picture and username)
+            userSlot.querySelector("img").src = player.image;  // Update profile image
+            userSlot.querySelector("p").textContent = player.username;  // Update username
+        } else if (action === 'left') {
+            // Reset to placeholder if player leaves
+            userSlot.querySelector("img").src = "/pics/placeholder_pic.jpg";  // Placeholder image
+            userSlot.querySelector("p").textContent = "Wolne Miejsce";  // Placeholder username
+        }
+    }
+
+    // Helper function to find the user slot based on username
+    function getUserSlot(username) {
+        // Search the user element by ID or any other identifier
+        for (let i = 1; i <= 4; i++) {
+            const userSlot = document.getElementById(`user${i}`);
+            const userNameElement = userSlot.querySelector("p");
+            
+            if (userNameElement.textContent === username || userNameElement.textContent === "Wolne Miejsce") {
+                return userSlot;
+            }
+        }
+        return null; // Return null if the slot isn't found (it shouldn't happen if the room has only 4 users)
+    }
+
+    // Handle disconnection
+    socket.on("disconnect", () => {
+        console.log("Disconnected from server");
+    });
+    </script>
+
+ </body>
+</html>

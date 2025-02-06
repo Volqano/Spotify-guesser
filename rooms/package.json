@@ -1,0 +1,26 @@
+{
+  "name": "rooms",
+  "version": "1.0.0",
+  "description": "dependencies form rooms in the app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bartosz Kebel",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cookie-parser": "^1.4.7",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "http": "^0.0.1-security",
+    "jest": "^29.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "path": "^0.12.7",
+    "querystring": "^0.2.1",
+    "socket.io": "^4.8.1",
+    "supertest": "^7.0.0"
+  }
+}
