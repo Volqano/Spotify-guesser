@@ -106,8 +106,8 @@ const getRefreshToken = async (user) => {
 
 
    async function playTheTrack(track_data, user) {
-    let accessToken = user.accessToken;
-    let track_uri = track_data.item.TrackObject.uri;
+    let accessToken = user.access_token;
+    let track_uri = track_data.item.uri;
     let track_position_ms = track_data.progress_ms; // Progress into the currently playing track or episode
 
     try {
@@ -119,6 +119,7 @@ const getRefreshToken = async (user) => {
         });
 
         let devices = await devicesResponse.json();
+        console.log(devices);
 
         if (!devices.devices || devices.devices.length === 0) {
             console.error('No devices found.');
