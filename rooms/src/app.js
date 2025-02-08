@@ -240,7 +240,7 @@ io.on('connection', (socket) => {
 
         try {
             const track = await getTheTrack(socket.id);
-            players=rooms[roomcode_map[socket_id]];
+            players=rooms[roomcode_map[socket.id]];
             for(i=0; i<players.length; i++)
                 {
                     playTheTrack(track,players[i]);
