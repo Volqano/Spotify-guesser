@@ -18,7 +18,7 @@ function generateRandomString(length) {
 
 function get_spotify_auth() {
     const state = generateRandomString(16);
-    const scope = 'user-read-private user-read-email';
+    const scope = 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state';
 
     const authUrl = 'https://accounts.spotify.com/authorize?' +
         querystring.stringify({

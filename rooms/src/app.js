@@ -104,6 +104,53 @@ const getRefreshToken = async (user) => {
      }
    }
 
+
+   async function playTheTrack(track_data, user) {
+    let accessToken = user.accessToken;
+    let track_uri = track_data.item.TrackObject.uri;
+    let track_position_ms = track_data.progress_ms; // Progress into the currently playing track or episode
+
+    try {
+        let devicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        let devices = await devicesResponse.json();
+
+        if (!devices.devices || devices.devices.length === 0) {
+            console.error('No devices found.');
+            return;
+        }
+
+        let device = devices.devices[0];
+        let device_id = device.id;
+
+        let playResponse = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                uris: [track_uri],
+                position_ms: track_position_ms
+            }),
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        if (playResponse.ok) {
+            console.log('Track is playing now!');
+        } else {
+            console.log('Error starting track:', await playResponse.json());
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+}
+
+
 async function getTheTrack(socket_id) {
     return new Promise(async (resolve, reject) => {
         let user = users_map[socket_id] || {};
