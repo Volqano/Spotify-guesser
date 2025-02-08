@@ -134,7 +134,7 @@
         function joinRoom() {
             const code = document.getElementById('room-code').value;
             if (!code) return alert("Enter valid room code!");
-            alert("Joining room " + code + "... Do implementacji");
+            window.location.href = window.location.href + "room/" + code;
         }
     </script>
 </body>
