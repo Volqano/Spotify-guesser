@@ -239,9 +239,12 @@ io.on('connection', (socket) => {
         }
 
         try {
-            const track = await 
-            getTheTrack(socket.id);
-            console.log(track);
+            const track = await getTheTrack(socket.id);
+            players=rooms[roomcode_map[socket_id]];
+            for(i=0; i<players.length; i++)
+                {
+                    playTheTrack(track,players[i]);
+                }
             } 
         catch (error) {
             console.log(error);
