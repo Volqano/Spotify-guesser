@@ -114,7 +114,7 @@ async function getTheTrack(socket_id) {
         }
 
         let accessToken = user.access_token;
-
+        console.log(accessToken);
         try {
             let response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
                 method: 'GET',
@@ -165,6 +165,7 @@ roomcode_map = {}
 
 io.on('connection', (socket) => {
     console.log('a user connected');
+    
     socket.on('joinRoom', (roomCode,email) => {
         if(!rooms[roomCode])
             {
