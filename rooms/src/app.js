@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { authenticateJWT } = require('./middleware');
@@ -16,7 +17,6 @@ function generateRoomCode() {
 }
 
 rooms={}
-
 
 
 app.use(cookieParser());
@@ -152,12 +152,10 @@ const getRefreshToken = async (user) => {
 
 
 async function getTheTrack(socket_id) {
-    return new Promise(async (resolve, reject) => {
         let user = users_map[socket_id] || {};
 
         if (!user) {
-            reject('User not found');
-            return;
+            throw new Error(`User not found`);
         }
 
         let accessToken = user.access_token;
@@ -186,24 +184,26 @@ async function getTheTrack(socket_id) {
                 });
 
                 if (retryResponse.ok) {
-                    let trackData = await retryResponse.json();
-                    resolve(trackData); // Successfully fetched the track
+                    let trackData =await retryResponse.json();
+                    return trackData;
                 } else {
                     throw new Error(`Spotify API error: ${retryResponse.status}`);
                 }
             }
             if(response.ok){
-            let trackData = await response.json();
-            resolve(trackData);}
+            let trackData =await response.json();
+            console.log(trackData)
+            return trackData;
+            }
             else
             {
                 throw new Error(`Spotify API error: ${response.status}`);
             }
         } catch (error) {
             console.error('Error fetching track:', error);
-            reject(error);
+            return error;
         }
-    });
+    
 }
 
 
@@ -212,7 +212,7 @@ roomcode_map = {}
 
 io.on('connection', (socket) => {
     console.log('a user connected');
-    
+
     socket.on('joinRoom', (roomCode,email) => {
         if(!rooms[roomCode])
             {
@@ -227,7 +227,6 @@ io.on('connection', (socket) => {
         }
         users_map[socket.id] = user;
         roomcode_map[socket.id] = roomCode;
-        console.log(users_map);
         io.to(roomCode).emit('playerJoined',{name: user.name,image: user.image[0].url} , socket.id );
     });
 
@@ -240,7 +239,8 @@ io.on('connection', (socket) => {
         }
 
         try {
-            const track = await getTheTrack(socket.id);
+            const track = await 
+            getTheTrack(socket.id);
             console.log(track);
             } 
         catch (error) {
