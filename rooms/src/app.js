@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { authenticateJWT } = require('./middleware');
@@ -16,7 +17,6 @@ function generateRoomCode() {
 }
 
 rooms={}
-
 
 
 app.use(cookieParser());
@@ -146,7 +146,8 @@ async function getTheTrack(socket_id) {
                 }
             }
             if(response.ok){
-            let trackData = await response.json();
+            let trackData = response.json();
+            console.log(await trackData)
             resolve(trackData);}
             else
             {
@@ -165,7 +166,7 @@ roomcode_map = {}
 
 io.on('connection', (socket) => {
     console.log('a user connected');
-    
+
     socket.on('joinRoom', (roomCode,email) => {
         if(!rooms[roomCode])
             {
@@ -180,7 +181,6 @@ io.on('connection', (socket) => {
         }
         users_map[socket.id] = user;
         roomcode_map[socket.id] = roomCode;
-        console.log(users_map);
         io.to(roomCode).emit('playerJoined',{name: user.name,image: user.image[0].url} , socket.id );
     });
 
