@@ -107,8 +107,11 @@ const getRefreshToken = async (user) => {
 
    async function playTheTrack(track_data, user) {
     let accessToken = user.access_token;
+    console.log(`ACCESS TOKEN: ${accessToken}`)
     let track_uri = track_data.item.uri;
+    console.log(`TRACK_DATA: ${track_data}`)
     let track_position_ms = track_data.progress_ms; // Progress into the currently playing track or episode
+    console.log(`TRACK POSITION MS: ${track_position_ms}`) 
 
     try {
         let devicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
@@ -128,6 +131,7 @@ const getRefreshToken = async (user) => {
 
         let device = devices.devices[0];
         let device_id = device.id;
+        console.log(`DEVICE_ID: ${device_id}`) 
 
         let playResponse = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
             method: 'PUT',
@@ -241,9 +245,12 @@ io.on('connection', (socket) => {
 
         try {
             const track = await getTheTrack(socket.id);
-            players=rooms[roomcode_map[socket.id]];
-            for(i=0; i<players.length; i++)
+            players = rooms[roomcode_map[socket.id]].players;
+            console.log("PLAYER LENGTH: ");
+            console.log(players.length);
+            for(let i = 0; i < players.length; i++)
                 {
+                    console.log("WBILEM DO PETLI POZDRO ");
                     playTheTrack(track,players[i]);
                 }
             } 
