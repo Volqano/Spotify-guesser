@@ -106,6 +106,12 @@ const getRefreshToken = async (user) => {
 
 
 async function playTheTrack(track_data, user) {
+    console.log(track_data)
+    if(!track_data)
+        {
+            console.log('takiego tracku to nie puszcze');
+            return;
+        }
     let accessToken = user.access_token;
     console.log(`ACCESS TOKEN: ${accessToken}`)
     let track_uri = track_data.item.uri;
@@ -235,7 +241,24 @@ io.on('connection', (socket) => {
         io.to(roomCode).emit('playerJoined',{name: user.name,image: user.image[0].url} , socket.id );
     });
 
+    socket.on('startTimer', ()=>
+    {
+        roomCode=roomcode_map[socket.id];
+        io.to(roomCode).emit('startTimer');
+    });
 
+    socket.on('turnChange', (active_users,turn)=>
+        {
+            turn = (turn + 1) % active_users.length;
+            roomCode=roomcode_map[socket.id];
+            io.to(roomCode).emit('turnChange',active_users[turn]);
+        });
+
+    socket.on('submitGuess',(guess)=>
+        {
+            console.log('zgadłeś ${guess}');
+            console.log(guess)
+        })
     socket.on('get_my_track', async ()=>
         {
             if (!users_map[socket.id]) {
