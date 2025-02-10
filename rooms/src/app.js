@@ -68,9 +68,17 @@ app.get('/room/:roomCode', authenticateJWT, async function(req, res) {
     users=[];
 
     for(i=0;i<4;i++){
-        placeholder=room.players[i]?{username: room.players[i].name , image: room.players[i].image[0].url}:{username: "Wolne Miejsce", image: "/pics/placeholder_pic.jpg"};
+        placeholder=room.players[i] ? {
+            username: room.players[i].name,
+            image: (room.players[i].image && room.players[i].image.length > 0) 
+            ? room.players[i].image[0].url 
+            : "/pics/placeholder_pic.jpg"
+        } : {
+            username: "Wolne Miejsce",
+            image: "/pics/placeholder_pic.jpg"
+        };
         users.push(placeholder);
-        }
+    }
     
     // Redirect the user to the room page (with user data, or other information as needed)
     res.render('room', {users: users, roomcode: roomCode, me: user.email, ip:ip_address})
@@ -239,7 +247,10 @@ io.on('connection', (socket) => {
         }
         users_map[socket.id] = user;
         roomcode_map[socket.id] = roomCode;
-        io.to(roomCode).emit('playerJoined',{name: user.name,image: user.image[0].url} , socket.id );
+        io.to(roomCode).emit('playerJoined', {
+            name: user.name,
+            image: user.image && user.image.length > 0 ? user.image[0].url : "/pics/placeholder_pic.jpg"
+        }, socket.id);
     });
 
     socket.on('startTimer', ()=>
@@ -315,7 +326,10 @@ io.on('connection', (socket) => {
                 rooms[roomCode].players=rooms[roomCode].players.filter(player => Object.keys(player).length > 0);
                 
                 // Notify the room about the user's disconnection
-                io.to(roomCode).emit('playerLeft', {name: user.name,image: user.image[0].url});
+                io.to(roomCode).emit('playerLeft', {
+                    name: user.name,
+                    image: user.image && user.image.length > 0 ? user.image[0].url : "/pics/placeholder_pic.jpg"
+                });
             }
         }
         
