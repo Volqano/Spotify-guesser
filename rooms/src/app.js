@@ -249,7 +249,11 @@ io.on('connection', (socket) => {
 
     socket.on('turnChange', (active_users,turn)=>
         {
+            console.log(active_users);
+            console.log(turn);
             turn = (turn + 1) % active_users.length;
+            console.log(turn);
+            console.log(active_users[turn]);
             roomCode=roomcode_map[socket.id];
             io.to(roomCode).emit('turnChange',active_users[turn]);
         });
@@ -257,7 +261,8 @@ io.on('connection', (socket) => {
     socket.on('submitGuess',(guess)=>
         {
             console.log('zgadłeś ${guess}');
-            console.log(guess)
+            console.log(guess);
+            socket.emit('guessResult',true);
         })
     socket.on('get_my_track', async ()=>
         {

@@ -243,7 +243,7 @@
                     clearInterval(interval);
                     timerElement.classList.add('hidden');
                     nextTurn();
-                    socket.emit('turnChange', activeUsers[currentTurn]);
+                    socket.emit('turnChange', activeUsers,currentTurn);
                 } else {
                     timerElement.textContent = timer;
                     timerElement.style.opacity = 1;
