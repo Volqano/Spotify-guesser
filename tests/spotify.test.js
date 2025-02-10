@@ -1,8 +1,8 @@
 const request = require('supertest');
-const app = require('../src/app');
-const { get_spotify_auth, get_spotify_tokens, get_user_data } = require('../src/spotify_auth');
+const app = require('../app/src/app');
+const { get_spotify_auth, get_spotify_tokens, get_user_data } = require('../app/src/spotify_auth');
 
-jest.mock('../src/spotify_auth', () => ({
+jest.mock('../app/src/spotify_auth', () => ({
     get_spotify_auth: jest.fn(() => 'https://accounts.spotify.com/authorize?mocked'),
     get_spotify_tokens: jest.fn(async () => ({ access_token: 'mock_access_token', refresh_token: 'mock_refresh_token' })),
     get_user_data: jest.fn(async () => ({ id: 'mock_id', display_name: 'mock_user' }))

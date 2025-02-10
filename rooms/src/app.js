@@ -105,7 +105,7 @@ const getRefreshToken = async (user) => {
    }
 
 
-   async function playTheTrack(track_data, user) {
+async function playTheTrack(track_data, user) {
     let accessToken = user.access_token;
     console.log(`ACCESS TOKEN: ${accessToken}`)
     let track_uri = track_data.item.uri;

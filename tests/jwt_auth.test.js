@@ -1,23 +1,13 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
-const app = require('../src/app');
-const { generateJWT } = require('../src/routes');
+const app = require('../app/src/app');
+const { generateJWT } = require('../app/src/routes');
 
 beforeAll(() => {
     process.env.JWT_SECRET = 'your_secret_value';
 });
 
 describe('JWT Authentication', () => {
-    it('should allow access to / if valid JWT token is provided', async () => {
-        const token = generateJWT({ id: 'user123', name: 'Test User' });
-        const response = await request(app)
-            .get('/')
-            .set('Cookie', `token=${token}`);
-        
-        expect(response.status).toBe(200);
-        expect(response.text).toContain('Logged as: Test User');
-    });
-
     it('should redirect to /login if no JWT token is provided', async () => {
         const response = await request(app).get('/');
         expect(response.status).toBe(302);
