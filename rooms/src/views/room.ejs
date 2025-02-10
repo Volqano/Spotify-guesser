@@ -1,52 +1,53 @@
 <html>
  <head>
-    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <style>
    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .spin {
-      animation: spin 2s linear infinite;
-    }
-    @keyframes ember {
-      0% { opacity: 1; transform: translateY(0); background: rgba(255, 69, 0, 0.8); }
-      100% { opacity: 0; transform: translateY(-50px); background: rgba(128, 128, 128, 0.5); }
-    }
-    .ember {
-      position: relative;
-    }
-    .ember div {
-      content: '';
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      background: rgba(255, 69, 0, 0.8);
-      border-radius: 50%;
-      animation: ember 2s infinite;
-    }
-    .ember div:nth-child(1) { top: 0; left: 0; animation-delay: 0s; }
-    .ember div:nth-child(2) { top: 0; left: 50%; animation-delay: 0.2s; }
-    .ember div:nth-child(3) { top: 0; left: 100%; animation-delay: 0.4s; }
-    .ember div:nth-child(4) { top: 50%; left: 0; animation-delay: 0.6s; }
-    .ember div:nth-child(5) { top: 50%; left: 100%; animation-delay: 0.8s; }
-    .ember div:nth-child(6) { top: 100%; left: 0; animation-delay: 1s; }
-    .ember div:nth-child(7) { top: 100%; left: 50%; animation-delay: 1.2s; }
-    .ember div:nth-child(8) { top: 100%; left: 100%; animation-delay: 1.4s; }
-    .ember div:nth-child(9) { top: 25%; left: 25%; animation-delay: 1.6s; }
-    .ember div:nth-child(10) { top: 25%; left: 75%; animation-delay: 1.8s; }
-    .ember div:nth-child(11) { top: 75%; left: 25%; animation-delay: 2s; }
-    .ember div:nth-child(12) { top: 75%; left: 75%; animation-delay: 2.2s; }
-    .ember div:nth-child(13) { top: 10%; left: 10%; animation-delay: 2.4s; }
-    .ember div:nth-child(14) { top: 10%; left: 90%; animation-delay: 2.6s; }
-    .ember div:nth-child(15) { top: 90%; left: 10%; animation-delay: 2.8s; }
-    .ember div:nth-child(16) { top: 90%; left: 90%; animation-delay: 3s; }
-    .ember div:nth-child(17) { top: 5%; left: 5%; animation-delay: 3.2s; }
-    .ember div:nth-child(18) { top: 5%; left: 95%; animation-delay: 3.4s; }
-    .ember div:nth-child(19) { top: 95%; left: 5%; animation-delay: 3.6s; }
-    .ember div:nth-child(20) { top: 95%; left: 95%; animation-delay: 3.8s; }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spin {
+            animation: spin 2s linear infinite;
+        }
+        @keyframes ember {
+            0% { opacity: 1; transform: translateY(0); background: rgba(255, 69, 0, 0.8); }
+            100% { opacity: 0; transform: translateY(-50px); background: rgba(128, 128, 128, 0.5); }
+        }
+        .ember {
+            position: relative;
+        }
+        .ember div {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 69, 0, 0.8);
+            border-radius: 50%;
+            animation: ember 2s infinite;
+        }
+        .ember div:nth-child(1) { top: 0; left: 0; animation-delay: 0s; }
+        .ember div:nth-child(2) { top: 0; left: 50%; animation-delay: 0.2s; }
+        .ember div:nth-child(3) { top: 0; left: 100%; animation-delay: 0.4s; }
+        .ember div:nth-child(4) { top: 50%; left: 0; animation-delay: 0.6s; }
+        .ember div:nth-child(5) { top: 50%; left: 100%; animation-delay: 0.8s; }
+        .ember div:nth-child(6) { top: 100%; left: 0; animation-delay: 1s; }
+        .ember div:nth-child(7) { top: 100%; left: 50%; animation-delay: 1.2s; }
+        .ember div:nth-child(8) { top: 100%; left: 100%; animation-delay: 1.4s; }
+        .ember div:nth-child(9) { top: 25%; left: 25%; animation-delay: 1.6s; }
+        .ember div:nth-child(10) { top: 25%; left: 75%; animation-delay: 1.8s; }
+        .ember div:nth-child(11) { top: 75%; left: 25%; animation-delay: 2s; }
+        .ember div:nth-child(12) { top: 75%; left: 75%; animation-delay: 2.2s; }
+        .ember div:nth-child(13) { top: 10%; left: 10%; animation-delay: 2.4s; }
+        .ember div:nth-child(14) { top: 10%; left: 90%; animation-delay: 2.6s; }
+        .ember div:nth-child(15) { top: 90%; left: 10%; animation-delay: 2.8s; }
+        .ember div:nth-child(16) { top: 90%; left: 90%; animation-delay: 3s; }
+        .ember div:nth-child(17) { top: 5%; left: 5%; animation-delay: 3.2s; }
+        .ember div:nth-child(18) { top: 5%; left: 95%; animation-delay: 3.4s; }
+        .ember div:nth-child(19) { top: 95%; left: 5%; animation-delay: 3.6s; }
+        .ember div:nth-child(20) { top: 95%; left: 95%; animation-delay: 3.8s; }
   </style>
  </head>
  <body class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 relative">
@@ -54,141 +55,224 @@
    <img alt="Spinning disk" class="spin opacity-50" src="/pics/disc_to_spin.png"/>
   </div>
   <div class="flex justify-between w-full max-w-4xl z-10">
-   <div id="user1" class="flex flex-col items-center">
+   <div class="flex flex-col items-center" id="user1">
     <img alt="<%= users[0].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[0].image %>"/>
     <p class="mt-2 text-white font-semibold"><%= users[0].username %></p>
    </div>
-   <div id="user2" class="flex flex-col items-center">
+   <div class="flex flex-col items-center" id="user2">
     <img alt="<%= users[1].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[1].image %>"/>
     <p class="mt-2 text-white font-semibold"><%= users[1].username %></p>
    </div>
   </div>
   <div class="flex justify-between w-full max-w-4xl mt-8 z-10">
-   <div id="user3" class="flex flex-col items-center">
+   <div class="flex flex-col items-center" id="user3">
     <img alt="<%= users[2].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[2].image %>"/>
     <p class="mt-2 text-white font-semibold"><%= users[2].username %></p>
    </div>
    <div class="flex flex-col items-center">
-     <button id="dynamicButton" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg flex items-center hidden" onclick="playtrack()">
-      <i class="fas fa-play mr-2"></i>
-      Play
-     </button>
-     <button id="guessButton" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center">
-      <i class="fas fa-question mr-2"></i>
-      Guess
-     </button>
+    <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg flex items-center hidden" id="dynamicButton" onclick="playtrack()">
+     <i class="fas fa-play mr-2">
+     </i>
+     Play
+    </button>
+    <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center" id="guessButton" onclick="submitGuess()">
+     <i class="fas fa-question mr-2">
+     </i>
+     Guess
+    </button>
+    <input class="mt-4 px-4 py-2 rounded-lg" id="guessInput" placeholder="Enter your guess" type="text"/>
    </div>
-   <div id="user4" class="flex flex-col items-center">
+   <div class="flex flex-col items-center" id="user4">
     <img alt="<%= users[3].username %>'s profile picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg" src="<%= users[3].image %>"/>
     <p class="mt-2 text-white font-semibold"><%= users[3].username %></p>
    </div>
   </div>
+  <div id="timer" class="absolute top-1/4 text-white text-4xl font-bold hidden"></div>
+  <div id="guessResult" class="absolute top-1/2 text-white text-4xl font-bold hidden"></div>
   <script>
+   let currentTurn = 0;
+        let activeUsers = [];
+        let myUserId = null;
+
         function setUserInFlames(userId) {
-      // Remove ember class from all users
-      document.querySelectorAll('.ember').forEach(el => {
-        el.classList.remove('ember');
-        // Remove ember divs
-        el.querySelectorAll('div').forEach(div => div.remove());
-      });
-      
-      // Add ember class to the selected user
-      const userElement = document.getElementById(userId);
-      userElement.classList.add('ember');
-      
-      // Add ember divs
-      for (let i = 0; i < 20; i++) {
-        const emberDiv = document.createElement('div');
-        userElement.appendChild(emberDiv);
-      }
-    }
+            // Remove ember class from all users
+            document.querySelectorAll('.ember').forEach(el => {
+                el.classList.remove('ember');
+                // Remove ember divs
+                el.querySelectorAll('div').forEach(div => div.remove());
+            });
 
-    // Example usage: Set user1 in flames
-    setUserInFlames('user1');
+            // Add ember class to the selected user
+            const userElement = document.getElementById(userId);
+            userElement.classList.add('ember');
 
-    // Function to toggle the visibility of the dynamic button
-    function toggleDynamicButton(isVisible) {
-      const button = document.getElementById('dynamicButton');
-      if (isVisible) {
-        button.classList.remove('hidden');
-      } else {
-        button.classList.add('hidden');
-      }
-    }
-
-    // Example usage: Show the dynamic button
-    toggleDynamicButton(true);
-    </script>
-
-    <script>
-    
-    function playtrack()
-    {
-        socket.emit('get_my_track');
-    }
-    // Connect to the backend server
-    const socket = io("http://<%= ip %>:81"); // Connects to the same domain automatically
-    const roomcode = "<%= roomcode %>";
-    const memail = "<%= me %>";
-    
-    socket.emit("joinRoom", roomcode, memail, socket.id);
-
-
-    socket.on("roomFull", (message) => {
-        alert(message); // Notify if the room is full
-    });
-
-    socket.on("playerJoined", (player,socket_id) => {
-        console.log(`${player.name} joined!`);
-        if(socket.id == socket_id)
-        {
-            return;
+            // Add ember divs
+            for (let i = 0; i < 20; i++) {
+                const emberDiv = document.createElement('div');
+                userElement.appendChild(emberDiv);
+            }
         }
-        // Update the corresponding user profile picture and username on the page
-        updateUserProfile(player, 'joined');
-    });
 
-    socket.on("playerLeft", (player) => {
-        console.log(`${player.name} left!`);
-        
-        // Reset the corresponding user profile to empty
-        updateUserProfile(player, 'left');
-    });
-
-    // Update User Profile on the page
-    function updateUserProfile(player, action) {
-        const userSlot = getUserSlot(player.name);
-        
-        if (action === 'joined') {
-            // Set user details (picture and username)
-            userSlot.querySelector("img").src = player.image;  // Update profile image
-            userSlot.querySelector("p").textContent = player.username;  // Update username
-        } else if (action === 'left') {
-            // Reset to placeholder if player leaves
-            userSlot.querySelector("img").src = "/pics/placeholder_pic.jpg";  // Placeholder image
-            userSlot.querySelector("p").textContent = "Wolne Miejsce";  // Placeholder username
+        function toggleDynamicButton(isVisible) {
+            const button = document.getElementById('dynamicButton');
+            if (isVisible) {
+                button.classList.remove('hidden');
+            } else {
+                button.classList.add('hidden');
+            }
         }
-    }
 
-    // Helper function to find the user slot based on username
-    function getUserSlot(username) {
-        // Search the user element by ID or any other identifier
+        function toggleGuessInput(isEnabled) {
+            const guessButton = document.getElementById('guessButton');
+            const guessInput = document.getElementById('guessInput');
+            if (isEnabled) {
+                guessButton.disabled = false;
+                guessInput.disabled = false;
+            } else {
+                guessButton.disabled = true;
+                guessInput.disabled = true;
+            }
+        }
+
+        function nextTurn() {
+            if (activeUsers.length === 0) return;
+
+            currentTurn = (currentTurn + 1) % activeUsers.length;
+            const nextUserId = activeUsers[currentTurn];
+            setUserInFlames(nextUserId);
+            toggleDynamicButton(nextUserId === myUserId); 
+            toggleGuessInput(nextUserId !== myUserId);
+        }
+
+        setUserInFlames('user1');
+        toggleDynamicButton(true);
+
+        function playtrack() {
+            toggleDynamicButton(false);
+            socket.emit('get_my_track');
+            socket.emit('startTimer');
+        }
+
+        function submitGuess() {
+            const guessInput = document.getElementById('guessInput').value;
+            console.log(`Guess submitted: ${guessInput}`);
+            socket.emit('submitGuess', guessInput);
+            toggleGuessInput(false);
+        }
+
+        // Connect to the backend server
+        const socket = io("http://<%= ip %>:81"); // Connects to the same domain automatically
+        const roomcode = "<%= roomcode %>";
+        const memail = "<%= me %>";
+
+        socket.emit("joinRoom", roomcode, memail, socket.id);
+
+        socket.on("roomFull", (message) => {
+            alert(message); // Notify if the room is full
+        });
+
+        socket.on("playerJoined", (player, socket_id) => {
+            console.log(`${player.name} joined!`);
+            if (socket.id == socket_id) {
+                myUserId = getUserSlot(player.name).id;
+                return;
+            }
+            // Update the corresponding user profile picture and username on the page
+            updateUserProfile(player, 'joined');
+        });
+
+        socket.on("playerLeft", (player) => {
+            console.log(`${player.name} left!`);
+
+            // Reset the corresponding user profile to empty
+            updateUserProfile(player, 'left');
+        });
+
+        // Update User Profile on the page
+        function updateUserProfile(player, action) {
+            const userSlot = getUserSlot(player.name);
+
+            if (action === 'joined') {
+                // Set user details (picture and username)
+                userSlot.querySelector("img").src = player.image;  // Update profile image
+                userSlot.querySelector("p").textContent = player.username;  // Update username
+                if (player.username !== "Wolne Miejsce") {
+                    activeUsers.push(userSlot.id);
+                }
+            } else if (action === 'left') {
+                // Reset to placeholder if player leaves
+                userSlot.querySelector("img").src = "https://placehold.co/128x128?text=Placeholder";  // Placeholder image
+                userSlot.querySelector("p").textContent = "Wolne Miejsce";  // Placeholder username
+                activeUsers = activeUsers.filter(id => id !== userSlot.id);
+            }
+        }
+
+        // Helper function to find the user slot based on username
+        function getUserSlot(username) {
+            // Search the user element by ID or any other identifier
+            for (let i = 1; i <= 4; i++) {
+                const userSlot = document.getElementById(`user${i}`);
+                const userNameElement = userSlot.querySelector("p");
+
+                if (userNameElement.textContent === username || userNameElement.textContent === "Wolne Miejsce") {
+                    return userSlot;
+                }
+            }
+            return null; // Return null if the slot isn't found (it shouldn't happen if the room has only 4 users)
+        }
+
+        // Handle disconnection
+        socket.on("disconnect", () => {
+            console.log("Disconnected from server");
+        });
+
+        // Listen for turn change from the server
+        socket.on("turnChange", (turnUserId) => {
+            setUserInFlames(turnUserId);
+            toggleDynamicButton(turnUserId === myUserId); // Show the play button only for the current user
+            toggleGuessInput(turnUserId !== myUserId);
+        });
+
+        // Listen for timer start from the server
+        socket.on("startTimer", () => {
+            let timer = 30;
+            const timerElement = document.getElementById('timer');
+            timerElement.classList.remove('hidden');
+            const interval = setInterval(() => {
+                if (timer <= 0) {
+                    clearInterval(interval);
+                    timerElement.classList.add('hidden');
+                    nextTurn();
+                    socket.emit('turnChange', activeUsers,currentTurn);
+                } else {
+                    timerElement.textContent = timer;
+                    timerElement.style.opacity = 1;
+                    setTimeout(() => {
+                        timerElement.style.opacity = 0;
+                    }, 500);
+                    timer--;
+                }
+            }, 1000);
+        });
+
+        // Listen for guess result from the server
+        socket.on("guessResult", (result) => {
+            const guessResultElement = document.getElementById('guessResult');
+            guessResultElement.textContent = result ? "Correct!" : "Wrong!";
+            guessResultElement.classList.remove('hidden');
+            setTimeout(() => {
+                guessResultElement.classList.add('hidden');
+            }, 2000);
+        });
+
+        // Initialize active users based on initial usernames
         for (let i = 1; i <= 4; i++) {
             const userSlot = document.getElementById(`user${i}`);
             const userNameElement = userSlot.querySelector("p");
-            
-            if (userNameElement.textContent === username || userNameElement.textContent === "Wolne Miejsce") {
-                return userSlot;
+            if (userNameElement.textContent !== "Wolne Miejsce") {
+                activeUsers.push(userSlot.id);
             }
         }
-        return null; // Return null if the slot isn't found (it shouldn't happen if the room has only 4 users)
-    }
-
-    // Handle disconnection
-    socket.on("disconnect", () => {
-        console.log("Disconnected from server");
-    });
-    </script>
-
+  </script>
  </body>
 </html>

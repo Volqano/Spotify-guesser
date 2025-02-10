@@ -1,3 +1,4 @@
 app/node_modules/
 rooms/node_modules/
+node_modules
 .env

@@ -6,6 +6,7 @@ const { authenticateJWT } = require('./middleware');
 const crypto = require('crypto');
 const http = require('http');
 const socketIo = require('socket.io');
+const { cleanSongTitle, getSongNameFromData } = require('./helpers');
 const ip_address = process.env.SERVER_IP
 
 const app = express();
@@ -67,15 +68,22 @@ app.get('/room/:roomCode', authenticateJWT, async function(req, res) {
     users=[];
 
     for(i=0;i<4;i++){
-        placeholder=room.players[i]?{username: room.players[i].name , image: room.players[i].image[0].url}:{username: "Wolne Miejsce", image: "/pics/placeholder_pic.jpg"};
+        placeholder=room.players[i] ? {
+            username: room.players[i].name,
+            image: (room.players[i].image && room.players[i].image.length > 0) 
+            ? room.players[i].image[0].url 
+            : "/pics/placeholder_pic.jpg"
+        } : {
+            username: "Wolne Miejsce",
+            image: "/pics/placeholder_pic.jpg"
+        };
         users.push(placeholder);
-        }
+    }
     
     // Redirect the user to the room page (with user data, or other information as needed)
     res.render('room', {users: users, roomcode: roomCode, me: user.email, ip:ip_address})
 
     // Socket.IO logic: Join the user to the corresponding Socket.IO room
-    io.to(roomCode).emit('playerJoined', user); // Notify others in the room
 });
 
 
@@ -105,7 +113,13 @@ const getRefreshToken = async (user) => {
    }
 
 
-   async function playTheTrack(track_data, user) {
+async function playTheTrack(track_data, user) {
+    console.log(track_data)
+    if(!track_data)
+        {
+            console.log('takiego tracku to nie puszcze');
+            return;
+        }
     let accessToken = user.access_token;
     console.log(`ACCESS TOKEN: ${accessToken}`)
     let track_uri = track_data.item.uri;
@@ -214,6 +228,7 @@ async function getTheTrack(socket_id) {
 
 users_map = {}
 roomcode_map = {}
+piosenki = {}
 
 io.on('connection', (socket) => {
     console.log('a user connected');
@@ -232,10 +247,33 @@ io.on('connection', (socket) => {
         }
         users_map[socket.id] = user;
         roomcode_map[socket.id] = roomCode;
-        io.to(roomCode).emit('playerJoined',{name: user.name,image: user.image[0].url} , socket.id );
+        io.to(roomCode).emit('playerJoined', {
+            name: user.name,
+            image: user.image && user.image.length > 0 ? user.image[0].url : "/pics/placeholder_pic.jpg"
+        }, socket.id);
     });
 
+    socket.on('startTimer', ()=>
+    {
+        roomCode=roomcode_map[socket.id];
+        io.to(roomCode).emit('startTimer');
+    });
 
+    socket.on('turnChange', (active_users,turn)=>
+        {
+            turn = (turn + 1) % active_users.length;
+            roomCode=roomcode_map[socket.id];
+            io.to(roomCode).emit('turnChange',active_users[turn]);
+        });
+
+    socket.on('submitGuess',(guess)=>
+        {
+            console.log(piosenki[roomcode_map[socket.id]]);
+            console.log(guess);
+            
+            piosenki[roomcode_map[socket.id]]==guess?socket.emit('guessResult',true):socket.emit('guessResult',false);
+
+        })
     socket.on('get_my_track', async ()=>
         {
             if (!users_map[socket.id]) {
@@ -253,7 +291,9 @@ io.on('connection', (socket) => {
                     console.log("WBILEM DO PETLI POZDRO ");
                     playTheTrack(track,players[i]);
                 }
-            } 
+            piosenki[roomcode_map[socket.id]] = cleanSongTitle(getSongNameFromData(track));
+            }
+
         catch (error) {
             console.log(error);
             }
@@ -286,7 +326,10 @@ io.on('connection', (socket) => {
                 rooms[roomCode].players=rooms[roomCode].players.filter(player => Object.keys(player).length > 0);
                 
                 // Notify the room about the user's disconnection
-                io.to(roomCode).emit('playerLeft', {name: user.name,image: user.image[0].url});
+                io.to(roomCode).emit('playerLeft', {
+                    name: user.name,
+                    image: user.image && user.image.length > 0 ? user.image[0].url : "/pics/placeholder_pic.jpg"
+                });
             }
         }
         
