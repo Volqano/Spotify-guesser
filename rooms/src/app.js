@@ -6,6 +6,7 @@ const { authenticateJWT } = require('./middleware');
 const crypto = require('crypto');
 const http = require('http');
 const socketIo = require('socket.io');
+const { cleanSongTitle, getSongNameFromData } = require('./helpers');
 const ip_address = process.env.SERVER_IP
 
 const app = express();
@@ -75,7 +76,6 @@ app.get('/room/:roomCode', authenticateJWT, async function(req, res) {
     res.render('room', {users: users, roomcode: roomCode, me: user.email, ip:ip_address})
 
     // Socket.IO logic: Join the user to the corresponding Socket.IO room
-    io.to(roomCode).emit('playerJoined', user); // Notify others in the room
 });
 
 
@@ -220,6 +220,7 @@ async function getTheTrack(socket_id) {
 
 users_map = {}
 roomcode_map = {}
+piosenki = {}
 
 io.on('connection', (socket) => {
     console.log('a user connected');
@@ -249,20 +250,18 @@ io.on('connection', (socket) => {
 
     socket.on('turnChange', (active_users,turn)=>
         {
-            console.log(active_users);
-            console.log(turn);
             turn = (turn + 1) % active_users.length;
-            console.log(turn);
-            console.log(active_users[turn]);
             roomCode=roomcode_map[socket.id];
             io.to(roomCode).emit('turnChange',active_users[turn]);
         });
 
     socket.on('submitGuess',(guess)=>
         {
-            console.log('zgadłeś ${guess}');
+            console.log(piosenki[roomcode_map[socket.id]]);
             console.log(guess);
-            socket.emit('guessResult',true);
+            
+            piosenki[roomcode_map[socket.id]]==guess?socket.emit('guessResult',true):socket.emit('guessResult',false);
+
         })
     socket.on('get_my_track', async ()=>
         {
@@ -281,7 +280,9 @@ io.on('connection', (socket) => {
                     console.log("WBILEM DO PETLI POZDRO ");
                     playTheTrack(track,players[i]);
                 }
-            } 
+            piosenki[roomcode_map[socket.id]] = cleanSongTitle(getSongNameFromData(track));
+            }
+
         catch (error) {
             console.log(error);
             }
