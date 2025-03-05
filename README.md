@@ -41,3 +41,10 @@ The app uses Spotify OAuth for user authentication, along with a JWT token for s
 - Competitiveness: Add a scoring system to reward players for guessing songs quickly
 - Database Integration: Connect a database to store user statistics and game scores
 
+<img width="1438" alt="Zrzut ekranu 2025-03-5 o 18 57 50" src="https://github.com/user-attachments/assets/e1224044-02b5-436d-b14c-19b123fe71cc" />
+<img width="1440" alt="Zrzut ekranu 2025-03-5 o 18 58 34" src="https://github.com/user-attachments/assets/d769c72c-3904-40ee-8738-ee7e903760a5" />
+
+## Authors
+- Mateusz Matyskel
+- Bartosz Kebel
+
